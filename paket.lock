@@ -1,0 +1,7 @@
+RESTRICTION: >= net46
+NUGET
+  remote: https://www.nuget.org/api/v2
+    AssimpNet (3.3.2)
+    FAKE (4.63)
+    FSharp.Core (4.2.3)
+    OpenTK (3.0.0-pre)

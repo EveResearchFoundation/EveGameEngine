@@ -15,3 +15,29 @@
 // --------------------------------------------------------------------------
 
 module Buffer
+open OpenTK
+open OpenTK.Graphics.OpenGL4
+
+module VAO =
+    /// <summary>
+    ///  Safe wrapping of the vertex array object's int id. 
+    /// </summary>
+    [<Struct>]
+    type VertexArrayObject = | VertexArrayObject of id:int
+
+    type VAO = VertexArrayObject
+    
+    /// <summary>
+    /// Used for indicating that a specific VAO is being used in a block. However this is not that safe to use, it's for research purposes.
+    /// </summary>
+    type VertexArrayObjectBuilder(vao:VertexArrayObject) =
+        let (VertexArrayObject id) = vao
+
+        member self.Run f =
+            // Bind the vertex array object
+            GL.BindVertexArray id
+            // Call the content in the block
+            f ()
+            // Unbind our vertex array object
+            GL.BindVertexArray 0u
+    

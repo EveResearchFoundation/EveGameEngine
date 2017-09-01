@@ -15,3 +15,8 @@
 // --------------------------------------------------------------------------
 
 module Texture
+
+type Texture = 
+    | Ambient of ID:int32
+    | Specular of ID:int32
+    | Diffuse of ID:int32

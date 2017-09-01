@@ -1,0 +1,7 @@
+source https://nuget.org/api/v2
+
+framework >= net46
+nuget FSharp.Core >= 4.1
+nuget FAKE 
+nuget OpenTK >= 3.0.0-pre
+nuget AssimpNet >= 3.3.2

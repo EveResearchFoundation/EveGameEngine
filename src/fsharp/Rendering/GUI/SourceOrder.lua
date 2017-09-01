@@ -1,3 +1,4 @@
 files {   
-    "Widget.fs"
+    "Widget.fs",
+    "SourceOrder.lua"
 }
