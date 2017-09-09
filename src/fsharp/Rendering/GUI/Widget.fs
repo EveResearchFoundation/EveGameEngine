@@ -14,6 +14,7 @@
 //  limitations under the License.
 // --------------------------------------------------------------------------
 
-module Widget
+namespace Renderer.GUI
 
-
+module Widget =
+    let a = ()

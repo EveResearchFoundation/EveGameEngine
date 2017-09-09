@@ -13,5 +13,20 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 // --------------------------------------------------------------------------
+namespace Renderer.LowLevel.GL4
 
-module Camera
+module Material =
+    open Shader
+
+    let activate (shader:ShaderProgram) (material:Renderer.AbstractionLayer.Material.Material) =
+        Shader.useProgram shader
+        let materialColorsToSet = [| 
+            "material.ambient", material.Ambient
+            "material.diffuse", material.Diffuse
+            "material.specular", material.Specular
+            "material.emissive", material.Emissive |]
+        
+        let setColor (a, b) = Shader.setVec4 a b shader
+        materialColorsToSet |> Array.iter setColor
+
+        Shader.setFloat32 "material.shininess" material.Shininess shader

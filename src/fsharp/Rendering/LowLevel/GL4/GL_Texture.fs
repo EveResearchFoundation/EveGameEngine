@@ -13,6 +13,26 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 // --------------------------------------------------------------------------
+namespace Renderer.LowLevel.GL4
 
-module SceneGraph
-// TODO: Add scene graph types and logic
+type Texture2DAttachmentLL = {
+    ID : int
+}
+
+module TextureAttachmentLL =
+    
+    open OpenTK.Graphics.OpenGL4
+    
+    open Renderer.AbstractionLayer
+    open Texture
+
+    let create (texture:Texture2D) =
+        let tid = GL.GenTexture()
+        let bufferId = GL.GenBuffer()
+
+        GL.BindTexture(TextureTarget.Texture2D, tid)
+        GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, texture.Width, texture.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, texture.Data)
+        GL.GenerateMipmap(GenerateMipmapTarget.Texture2D)
+        GL.BindTexture(TextureTarget.Texture2D, 0);
+        { ID = tid }
+

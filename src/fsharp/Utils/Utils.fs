@@ -1,5 +1,30 @@
 module Utils
 
+
+[<Interface>]
+type IResourceManaged =
+    abstract ID : System.Guid
+
+/// <summary>
+/// Provides F# friendly functions from the System.Collections namespace
+/// </summary>
+[<AutoOpen>]
+module Collections =
+    
+    /// <summary>
+    /// Provides F# friendly functions from the System.Collections.Generic namespace
+    /// </summary>
+    [<AutoOpen>]
+    module Generic =
+        open System.Collections.Generic
+
+        /// <summary>
+        /// Creates a key value pair from an existing key and value
+        /// </summary>
+        /// <param name="key">The key</param>
+        /// <param name="value">The value, which the key refers to</param>
+        let inline createKeyValuePair key value = KeyValuePair(key, value)
+
 module File =
     open System.IO
     open System

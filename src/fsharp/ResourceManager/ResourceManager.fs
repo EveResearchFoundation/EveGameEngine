@@ -13,6 +13,9 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 // --------------------------------------------------------------------------
-namespace Renderer
+namespace ResourceManager
 
-type Options = | Default
+open System
+
+type IResourceManager =
+    abstract register<'T> : 'T -> Guid

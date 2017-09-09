@@ -13,6 +13,22 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 // --------------------------------------------------------------------------
-namespace Renderer
+namespace Renderer.AbstractionLayer
 
-type Options = | Default
+module Model =
+    open System
+
+    open Mesh
+
+    [<Struct>]
+    type GenericModel<'Vec3Type, 'Vec2Type, 'Mat4Type> = {
+        Meshes : GenericMesh<'Vec3Type, 'Vec2Type> []
+        mutable Translation : 'Mat4Type
+    }
+
+    type Model = GenericModel<Vec3, Vec2, Mat4>
+
+    // NOTE:
+    // This should be done somewhere else under IO utilities.
+
+    

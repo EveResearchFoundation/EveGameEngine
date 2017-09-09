@@ -3,10 +3,20 @@ project ("Renderer")
     kind "SharedLib"
     language "F#"
 
-    files "RendererUtils.fs"
+    files {
+        "RendererUtils.fs"
+    }
+    
+    -- Abstraction layer source files come first
+    include("AbstractionLayer/SourceOrder.lua")
 
-    -- Low Level source files must be first
-    include("LowLevel/SourceOrder.lua")
+    files { 
+        "RendererResourceManager.fs",
+        "Scene.fs"
+    }
+
+    -- Low Level source files must be afterwards
+    include("LowLevel/GL4/SourceOrder.lua")
     -- Now we can continue with the GUI
     include("GUI/SourceOrder.lua")
 

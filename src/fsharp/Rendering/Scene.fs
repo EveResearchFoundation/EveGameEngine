@@ -13,10 +13,16 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 // --------------------------------------------------------------------------
+namespace Renderer
 
-module Texture
+open Renderer.AbstractionLayer
 
-type Texture = 
-    | Ambient of ID:int32
-    | Specular of ID:int32
-    | Diffuse of ID:int32
+open Model
+
+type Scene = {
+    Initialized : bool
+    Models : Model[]
+}
+
+module Scene = 
+    let a = ()
