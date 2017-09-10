@@ -19,49 +19,44 @@ open System.Runtime.InteropServices
 
 
 /// <summary>
-/// Standard vertex definition for the EveGameEngine.
+/// We use OpenTK's vectors as standard vector types accross the whole engine.
 /// </summary>
 [<Struct>]
 [<StructLayout(LayoutKind.Sequential)>]
-type GenericVertex<'Vec3Type, 'Vec2Type> = {
-    Position : 'Vec3Type
-    Normal : 'Vec3Type
-    TexCoord : 'Vec2Type
+type Vertex = {
+    Position : Vec3
+    Normal : Vec3
+    TexCoord : Vec2
 }
 
 with
+
     /// <summary>
     /// Helper function for retrieving the offset of a specific vertex attribute (struct).
     /// </summary>
     /// <param name="name"></param>
     static member offsetof name = 
-        Marshal.OffsetOf(typeof<GenericVertex<'Vec3Type, 'Vec2Type>>, name)
+        Marshal.OffsetOf(typeof<Vertex>, name)
     
     /// <summary>
     /// Helper value indicating the offset of the `Position` field.
     /// </summary>
     static member offset_Position = 
-        GenericVertex<'Vec3Type, 'Vec2Type>.offsetof "Position@"
+        Vertex.offsetof "Position@"
     
     /// <summary>
     /// Helper value indicating the offset of the `Normal` field.
     /// </summary>
     static member offset_Normal = 
-        GenericVertex<'Vec3Type, 'Vec2Type>.offsetof "Normal@"
+        Vertex.offsetof "Normal@"
 
     /// <summary>
     /// Helper value indicating the offset of the `TexCoord` field.
     /// </summary>
     static member offset_TexCoord = 
-        GenericVertex<'Vec3Type, 'Vec2Type>.offsetof "TexCoord@"
+        Vertex.offsetof "TexCoord@"
         
     /// <summary>
     /// Helper value indicating the size of the `Vertex` struct record.
     /// </summary>
-    static member size = Marshal.SizeOf<GenericVertex<'Vec3Type, 'Vec2Type>>()
-
-
-/// <summary>
-/// We use OpenTK's vectors as standard vector types accross the whole engine.
-/// </summary>
-type Vertex = GenericVertex<Vec3, Vec2>
+    static member size = Marshal.SizeOf<Vertex>()//<Vertex>()

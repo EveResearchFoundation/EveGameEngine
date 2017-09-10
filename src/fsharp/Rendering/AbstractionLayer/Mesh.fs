@@ -29,18 +29,9 @@ module Mesh =
     /// Low Level graphics implementations may use this with additional information (which however isn't required)
     /// </summary>
     [<Struct>]
-    type GenericMesh<'Vec3Type, 'Vec2Type> =  {
-        Vertices : GenericVertex<'Vec3Type, 'Vec2Type>[]
+    type Mesh = {
+        Vertices : Vertex[]
         Indices : int[]
         TextureReference : TextureReferenceID[]
         MaterialReference : MaterialReferenceID
     }
-
-    type MeshResourcePair<'Attachment, 'Vec3Type, 'Vec2Type> = 
-        System.Collections.Generic.KeyValuePair<GenericMesh<'Vec3Type, 'Vec2Type>, 'Attachment>
-
-
-    let inline createResourcePair mesh attachment =
-        MeshResourcePair(mesh, attachment)
-    
-    type Mesh = GenericMesh<Vec3, Vec2>

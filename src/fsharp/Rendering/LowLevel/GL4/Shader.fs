@@ -47,7 +47,7 @@ module Shader =
         useProgram program
         GL.UniformMatrix4(loc, false, &m)
     #if DEBUG
-        printfn "updated uniform %A with value %A" name value
+        // printfn "updated uniform %A with value %A" name value
     #endif
         reset ()
 
@@ -81,17 +81,7 @@ module Shader =
         useProgram program
         GL.Uniform1(loc, value)
 
-    /// <summary>
-    /// Creates a shader with the provided specifiers.
-    /// Currently only creates a shader program with fragment and vertex shader.
-    /// </summary>
-    /// <param name="shaderSpecifiers">The first parameter contains the shader type, the second specifies the path to the shader source.</param>
-    let create shaderSpecifiers =
-        let loadAndCompileShader (shaderType:ShaderType) path =
-            let content = 
-                match Utils.File.tryReadAllText path with 
-                | Some a -> a 
-                | _ -> failwith "Error while loading shader source"
+    let private loadAndCompileShader (shaderType:ShaderType) content =
             let shader = GL.CreateShader(shaderType)
             do GL.ShaderSource(shader, content)
             do GL.CompileShader shader
@@ -101,13 +91,32 @@ module Shader =
             printfn "%A" (GL.GetError())
     #endif
             shader
+    
 
+    let create shaderSpecifiers =
         let shaders = 
             shaderSpecifiers 
-            |> Array.map(fun (kind, path) -> loadAndCompileShader kind path)
+            |> Array.map(fun (kind, content) -> content|> loadAndCompileShader kind)
         let program = GL.CreateProgram()
         for shader in shaders do GL.AttachShader(program, shader)
         GL.LinkProgram(program)
         for shader in shaders do GL.DeleteShader(shader)
         program |> ShaderProgram
+
+    /// <summary>
+    /// Creates a shader with the provided specifiers.
+    /// Currently only creates a shader program with fragment and vertex shader.
+    /// </summary>
+    /// <param name="shaderSpecifiers">The first parameter contains the shader type, the second specifies the path to the shader source.</param>
+    let createFromFiles shaderSpecifiers =
+        let readShaderFile path =
+            match Utils.File.tryReadAllText path with 
+            | Some a -> a 
+            | _ -> failwith "Error while loading shader source"
+
+        let result = 
+            shaderSpecifiers 
+            |> Array.map(fun (kind, path) -> kind, readShaderFile path)
+
+        create result
 

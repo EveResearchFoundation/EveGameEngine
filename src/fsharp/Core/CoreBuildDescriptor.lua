@@ -3,15 +3,14 @@ project ("Core")
     kind "SharedLib"
     language "F#"
 
-    packagesDir = "../../../packages/"
-
     files {
         "World.fs",
+        -- "GameWindow.fs",
         "CoreBuildDescriptor.lua"
     }
 
     -- filter "system:windows"
-    --     files { packagesDir .. "AssimpNet/build/native/win-x64/Assimp64.dll" }
+    --     files { pathToAssimpDll }
 
     -- Linux and Mac OSX missing here...
 
@@ -20,5 +19,5 @@ project ("Core")
         "FSharp.Core",
         "Utils",
         "Renderer",
-        packagesDir .. "OpenTK/lib/net20/OpenTK.dll"
+        pathToOpenTKDll
     }

@@ -21,12 +21,12 @@ module Material =
     let activate (shader:ShaderProgram) (material:Renderer.AbstractionLayer.Material.Material) =
         Shader.useProgram shader
         let materialColorsToSet = [| 
-            "material.ambient", material.Ambient
-            "material.diffuse", material.Diffuse
-            "material.specular", material.Specular
-            "material.emissive", material.Emissive |]
+            "Material.ambient", material.Ambient
+            "Material.diffuse", material.Diffuse
+            "Material.specular", material.Specular
+            "Material.emissive", material.Emissive |]
         
         let setColor (a, b) = Shader.setVec4 a b shader
         materialColorsToSet |> Array.iter setColor
 
-        Shader.setFloat32 "material.shininess" material.Shininess shader
+        Shader.setFloat32 "Material.shininess" material.Shininess shader

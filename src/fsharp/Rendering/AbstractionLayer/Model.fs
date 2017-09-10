@@ -21,14 +21,9 @@ module Model =
     open Mesh
 
     [<Struct>]
-    type GenericModel<'Vec3Type, 'Vec2Type, 'Mat4Type> = {
-        Meshes : GenericMesh<'Vec3Type, 'Vec2Type> []
-        mutable Translation : 'Mat4Type
+    type Model = {
+        Meshes : Mesh []
+        mutable Translation : Mat4
     }
-
-    type Model = GenericModel<Vec3, Vec2, Mat4>
-
-    // NOTE:
-    // This should be done somewhere else under IO utilities.
 
     

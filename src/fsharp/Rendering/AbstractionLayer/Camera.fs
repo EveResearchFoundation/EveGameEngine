@@ -42,15 +42,17 @@ module Camera =
         camera.Right <- Vec3.Normalize(Vec3.Cross(camera.Front, camera.WorldUp))
         camera.Up <- Vec3.Normalize(Vec3.Cross(camera.Right, camera.Front))
 
-    let processMouseInputConstrained (camera:byref<Camera<_>>) xoffset yoffset =
-        camera.Yaw <- camera.Yaw - xoffset * camera.MouseSensitivity
+    let processMouseInputConstrained (camera:ref<Camera<_>>) xoffset yoffset =
+        let mutable localCamera = !camera
+        localCamera.Yaw <- localCamera.Yaw - xoffset * localCamera.MouseSensitivity
         let newPitch =
-            let p = camera.Pitch + yoffset * camera.MouseSensitivity
+            let p = localCamera.Pitch + yoffset * localCamera.MouseSensitivity
             if p > 89.0 then 89.0
             elif p < -89.0 then -89.0
             else p
-        camera.Pitch <- newPitch
-        updateCameraVectors &camera
+        localCamera.Pitch <- newPitch
+        updateCameraVectors &localCamera
+        camera := localCamera
 
     let getViewMatrix camera = Mat4.LookAt(camera.Position, camera.Position + camera.Front, camera.Up)
 

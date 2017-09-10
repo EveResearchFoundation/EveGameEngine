@@ -1,0 +1,29 @@
+# Exported from 3D Builder
+
+newmtl Glass
+Kd 1.000000 1.000000 1.000000
+map_Kd glass_dif.png
+
+newmtl Leg
+Kd 1.000000 1.000000 1.000000
+map_Kd leg_dif.png
+
+newmtl Hand
+Kd 1.000000 1.000000 1.000000
+map_Kd hand_dif.png
+
+newmtl Glass
+Kd 1.000000 1.000000 1.000000
+map_Kd glass_dif.png
+
+newmtl Arm
+Kd 1.000000 1.000000 1.000000
+map_Kd arm_dif.png
+
+newmtl Helmet
+Kd 1.000000 1.000000 1.000000
+map_Kd helmet_diff.png
+
+newmtl Body
+Kd 1.000000 1.000000 1.000000
+map_Kd body_dif.png

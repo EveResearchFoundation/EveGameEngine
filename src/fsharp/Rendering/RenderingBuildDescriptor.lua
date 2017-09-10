@@ -20,16 +20,15 @@ project ("Renderer")
     -- Now we can continue with the GUI
     include("GUI/SourceOrder.lua")
 
-    packagesDir = "../../../packages/"
-
     files {
         "RendererOptions.fs",
         "Renderer.fs",
-        "RenderingBuildDescriptor.lua"
+        "RenderingBuildDescriptor.lua",
+        pathToShadersDir .. "/*.*"
     }
 
     filter "system:windows"
-        files { packagesDir .. "AssimpNet/build/native/win-x64/Assimp64.dll" }
+        files { pathToAssimpDll }
 
     -- Linux and Mac OSX missing here...
 
@@ -37,6 +36,12 @@ project ("Renderer")
         "System",
         "FSharp.Core",
         "Utils",
-        packagesDir .. "OpenTK/lib/net20/OpenTK.dll",
-        packagesDir .. "AssimpNet/lib/net45/AssimpNet.dll"
+        "System.Drawing",
+        pathToOpenTKDll,
+        pathToManagedAssimpDll
     }
+
+    filter "files:**.vert"
+        buildaction "Embed"
+    filter "files:**.frag"
+        buildaction "Embed"

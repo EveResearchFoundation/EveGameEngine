@@ -24,14 +24,16 @@ module Manager =
     open Mesh
     open Model
     open Material
+    open System.IO
 
-    let private textureMap = Dictionary<TextureReferenceID, Texture2D>()
+    let textureMap = Dictionary<TextureReferenceID, Texture2D>()
     // let private textureMapBackwards = Dictionary<Texture2D, TextureReferenceID>()
 
-    let private materialMap = Dictionary<MaterialReferenceID, Material>()
-    let private materialMapBackwards = Dictionary<Material, MaterialReferenceID>()
+    let materialMap = Dictionary<MaterialReferenceID, Material>()
+    let materialMapBackwards = Dictionary<Material, MaterialReferenceID>()
 
     let private assimpContext = new Assimp.AssimpContext()
+    let private currentAssembly = System.Reflection.Assembly.GetExecutingAssembly()
 
     let registerTexture texture =
         let id = Guid.NewGuid()
@@ -64,7 +66,7 @@ module Manager =
         else
             failwith "not implemented"
 
-    let loadModel path defs =
+    let loadModel path =
         let scene = assimpContext.ImportFile path
         let assimpMeshes = scene.Meshes |> Seq.toArray
         let assimpTextures = scene.Textures |> Seq.toArray
@@ -76,7 +78,7 @@ module Manager =
                         Diffuse = material.ColorDiffuse |> RendererUtils.vec4FromAssimpVec4
                         Specular = material.ColorSpecular |> RendererUtils.vec4FromAssimpVec4
                         Emissive = material.ColorEmissive |> RendererUtils.vec4FromAssimpVec4
-                        Shininess = material.Shininess }
+                        Shininess = if material.Shininess <= 0.f then 1.f else material.Shininess }
                 registerMaterial res
 
             scene.Materials
@@ -93,9 +95,9 @@ module Manager =
             dict
 
         let loadMesh (assimpMesh:Assimp.Mesh) =
-            let textureIDs = 
-                assimpMesh.TextureCoordinateChannels
-                |> Array.mapi (fun i texCoords -> textureDict.[i])
+            let textureIDs = [| |]
+                //assimpMesh.TextureCoordinateChannels
+                //|> Array.mapi (fun i texCoords -> textureDict.[i])
             let convertAssimpVectorList = Seq.map RendererUtils.vec3FromAssimpVec3 >> Seq.toArray
             let vertices = assimpMesh.Vertices |> convertAssimpVectorList
             let normals = assimpMesh.Normals |> convertAssimpVectorList
@@ -116,7 +118,14 @@ module Manager =
 
         let meshes = assimpMeshes |> Array.map loadMesh
 
-        { Meshes = meshes }
+        {   Meshes = meshes
+            Translation = Mat4() }
+        
 
-
-            
+    let tryGetContentOfEmbeddedTextFile name =
+        try
+            use stream = currentAssembly.GetManifestResourceStream name
+            use reader = new StreamReader(stream)
+            reader.ReadToEnd () |> Result.Ok 
+        with e ->
+            e |> Result.Error 
