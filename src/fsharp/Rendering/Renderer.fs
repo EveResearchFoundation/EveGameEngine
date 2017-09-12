@@ -15,20 +15,21 @@
 // --------------------------------------------------------------------------
 namespace Renderer
 
+[<RequireQualifiedAccess>]
 module Renderer =
     open System
-    open System.Resources
 
     open OpenTK
     open OpenTK.Graphics.OpenGL4
 
     open Renderer.LowLevel.GL4
-    open Buffer
+
     open AbstractionLayer.Camera
+    open Renderer.AbstractionLayer
 
     //let private assemblyResources = ResourceManager( ,System.Reflection.Assembly.GetExecutingAssembly())
 
-    type OpenGL4Renderer (scene:ref<Scene>, camera:ref<Camera<Vec3>>, width, height) as self =
+    type OpenGL4Renderer (scene:Scene ref, camera:ref<Camera>, width, height) as self =
         inherit GameWindow(width, height, Graphics.GraphicsMode.Default, "F# OpenGL Test", GameWindowFlags.Default, DisplayDevice.Default, 4, 0, Graphics.GraphicsContextFlags.Debug ||| Graphics.GraphicsContextFlags.ForwardCompatible)
         do
             OpenTK.Toolkit.Init(ToolkitOptions.Default) |> ignore
@@ -43,14 +44,6 @@ module Renderer =
 
         let mutable projectionMatrix = createProjectionMatrix width height
         
-        let glContext = self.Context
-        do
-            self.Visible <- true
-            glContext.LoadAll()
-            glContext.ErrorChecking <- true
-            GL.Enable(EnableCap.DepthTest)
-            GL.Viewport(0, 0, width, height)
-
         let shader = 
             let unwrap = 
                 function
@@ -62,20 +55,10 @@ module Renderer =
                     ShaderType.FragmentShader,  Manager.tryGetContentOfEmbeddedTextFile "SimpleLight.frag" |> unwrap |] 
         
         let models =
-            (!scene).Models 
-            |> Array.mapi (fun i model -> i, model.Meshes |> Array.mapi (fun i mesh -> i, MeshLLAttachment.MeshLLAttachment.create mesh))
-        
+            (!scene).Models
+            |> Seq.map (fun model -> model.Key, model.Value.Meshes |> Array.mapi (fun i mesh -> i, MeshLLAttachment.MeshLLAttachment.create mesh))
 
-        override __.OnResize(args:EventArgs) =
-            self.MakeCurrent()
-            printfn "resized"
-            let w, h = self.Width, self.Height
-            GL.Viewport(0, 0, w, h)
-            projectionMatrix <- createProjectionMatrix w h
-
-            ()
-
-        member __.Render () =
+        let render () =
             match GL.GetError() with
             | ErrorCode.NoError -> ()
             | _ as error -> printfn "%A" error
@@ -92,15 +75,36 @@ module Renderer =
                 Shader.setVec3 "viewPos" (!camera).Position |]
             |> Array.iter (fun f -> f shader)
             for glModel in models do
-                let i, meshes = glModel
-                let model = (!scene).Models.[i]
+                let key, meshes = glModel
+                let model = (!scene).Models.[key]
                 let translation = model.Translation
-                let normalMatrix = Mat4.Transpose(translation)
+                let normalMatrix = Mat4.Transpose translation
                 Shader.setMat4 "model" translation shader
                 Shader.setMat4 "normalModel" normalMatrix shader
                 for glMesh in meshes do 
-                    let i, attachment = glMesh
-                    let mesh = model.Meshes.[i]
+                    let index, attachment = glMesh
+                    let mesh = model.Meshes.[index]
                     MeshLLAttachment.MeshLLAttachment.draw mesh attachment shader
             self.SwapBuffers()
+
+        let glContext = self.Context
+        do
+            self.Visible <- true
+            glContext.LoadAll()
+            glContext.ErrorChecking <- true
+            GL.Enable(EnableCap.DepthTest)
+            GL.Viewport(0, 0, width, height)
+
+            self.RenderFrame.Add(fun _ -> render())
+
+            self.TargetUpdateFrequency <- 60.
+
+        override __.OnResize(args:EventArgs) =
+            self.MakeCurrent()
+            let w, h = self.Width, self.Height
+            GL.Viewport(0, 0, w, h)
+            projectionMatrix <- createProjectionMatrix w h
+            ()
+
+        
 

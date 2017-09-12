@@ -19,8 +19,7 @@ module Model =
     open System
 
     open Mesh
-
-    [<Struct>]
+    
     type Model = {
         Meshes : Mesh []
         mutable Translation : Mat4

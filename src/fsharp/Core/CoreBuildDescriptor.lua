@@ -5,7 +5,7 @@ project ("Core")
 
     files {
         "World.fs",
-        -- "GameWindow.fs",
+        "GameWindow.fs",
         "CoreBuildDescriptor.lua"
     }
 
@@ -19,5 +19,6 @@ project ("Core")
         "FSharp.Core",
         "Utils",
         "Renderer",
+        "System.Drawing",
         pathToOpenTKDll
     }

@@ -67,7 +67,7 @@ module Manager =
             failwith "not implemented"
 
     let loadModel path =
-        let scene = assimpContext.ImportFile path
+        let scene = assimpContext.ImportFile(path, Assimp.PostProcessSteps.None)
         let assimpMeshes = scene.Meshes |> Seq.toArray
         let assimpTextures = scene.Textures |> Seq.toArray
         let materialDict =

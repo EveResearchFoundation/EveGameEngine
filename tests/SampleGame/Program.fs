@@ -22,38 +22,39 @@ open System
 open OpenTK.Input
 
 // Eve render engine imports
-open Renderer.Renderer
 open Renderer.AbstractionLayer.Camera
 open Renderer.AbstractionLayer
 open Renderer
 
 open Support
+open System.Collections.Generic
 
 [<EntryPoint>]
 let main args =
     printfn "args: %A" args
-    let camera = Camera.createDefault() |> ref
-    let mutable nanosuitModel = Manager.loadModel nanosuitPath
+    let mutable nanosuitModel, nanosuitGuid = Manager.loadModel nanosuitPath, Guid.NewGuid()
     nanosuitModel.Translation <- Mat4.CreateScale(0.05f) * Mat4.CreateTranslation(0.f, -0.5f, -0.5f)
+    //let mutable brainStemModel = Manager.loadModel brainStemPath
+    // nanosuitModel.Translation <- Mat4.CreateScale(0.05f) * Mat4.CreateTranslation(0.f, -0.5f, -0.5f)
     let scene = 
-        {   Models = [| nanosuitModel |] 
+        {   Models = Map [ nanosuitGuid, nanosuitModel ] |> Dictionary
             Initialized = true  } |> ref
 
-    use window = new OpenGL4Renderer(scene, camera, 800, 600)
+    use window = new Core.GameWindowGL(scene, 800, 600)
 
-    let rec gameLoop lastMouseX lastMouseY =
-        if window.IsExiting |> not then
-            window.Render()
-            window.ProcessEvents()
-            if window.Mouse.[MouseButton.Left] then
-                let dx = lastMouseX - window.Mouse.X |> float
-                let dy = lastMouseY - window.Mouse.Y |> float
-                Camera.processMouseInputConstrained camera dx dy
-            let mouseX, mouseY = window.Mouse.X, window.Mouse.Y
-            System.Threading.Thread.Sleep(1)
-            gameLoop mouseX mouseY
+    let mutable i = 0
+    window.UpdateFrame.Add(fun _ ->
+        let t = i |> float32
+        let pi = Math.PI |> float32
+        let newTranslation = Mat4.CreateScale(0.05f) * Mat4.CreateTranslation(0.f, 0.5f * sin(t * 2.f * pi * 0.005f), -0.5f)
+        scene.Value.Models.[nanosuitGuid].Translation  <- newTranslation
+        if i >= 1000 then
+            i <- 0
+        else
+            i <- i + 1
+    )
     
-    gameLoop window.Mouse.X window.Mouse.Y
+    window.Run()
 
     Console.ReadKey() |> ignore
 

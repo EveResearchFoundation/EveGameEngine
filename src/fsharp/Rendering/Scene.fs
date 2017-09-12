@@ -18,10 +18,11 @@ namespace Renderer
 open Renderer.AbstractionLayer
 
 open Model
+open System
 
 type Scene = {
     Initialized : bool
-    Models : Model[]
+    Models : System.Collections.Generic.Dictionary<Guid, Model>
 }
 
 module Scene = 
