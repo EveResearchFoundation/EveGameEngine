@@ -14,6 +14,6 @@ Current state:
 
 ## Remarks:
 
-This is **work in progres**!
+This is **work in progress**!
 
 Further information is going to be added. 
