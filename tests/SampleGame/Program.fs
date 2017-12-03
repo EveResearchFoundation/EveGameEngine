@@ -46,8 +46,8 @@ let main args =
     window.UpdateFrame.Add(fun _ ->
         let t = i |> float32
         let pi = Math.PI |> float32
-        let newTranslation = Mat4.CreateScale(0.05f) * Mat4.CreateTranslation(0.f, 0.5f * sin(t * 2.f * pi * 0.005f), -0.5f)
-        scene.Value.Models.[nanosuitGuid].Translation  <- newTranslation
+        //let newTranslation = Mat4.CreateScale(0.05f) * Mat4.CreateTranslation(0.f, 0.5f * sin(t * 2.f * pi * 0.005f), -0.5f)
+        //scene.Value.Models.[nanosuitGuid].Translation  <- newTranslation
         if i >= 1000 then
             i <- 0
         else

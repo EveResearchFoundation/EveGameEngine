@@ -25,14 +25,23 @@ module TextureAttachmentLL =
     
     open Renderer.AbstractionLayer
     open Texture
+    open System.Collections.Generic
+    
+    let private existingTextures = Dictionary()
 
     let create (texture:Texture2D) =
-        let tid = GL.GenTexture()
-        let bufferId = GL.GenBuffer()
-
-        GL.BindTexture(TextureTarget.Texture2D, tid)
-        GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, texture.Width, texture.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, texture.Data)
-        GL.GenerateMipmap(GenerateMipmapTarget.Texture2D)
-        GL.BindTexture(TextureTarget.Texture2D, 0);
-        { ID = tid }
-
+        if existingTextures.ContainsKey texture.Guid |> not then
+            let tid = GL.GenTexture()
+            GL.BindTexture(TextureTarget.Texture2D, tid)
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, OpenTK.Graphics.OpenGL4.TextureWrapMode.Repeat |> int)  
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, OpenTK.Graphics.OpenGL4.TextureWrapMode.Repeat |> int)
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, OpenTK.Graphics.OpenGL4.TextureMinFilter.Linear|> int)
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, OpenTK.Graphics.OpenGL4.TextureMagFilter.Linear|> int)
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, texture.Width, texture.Height, 0, PixelFormat.Bgra, PixelType.UnsignedByte, texture.Data)
+            GL.GenerateMipmap(GenerateMipmapTarget.Texture2D)
+            GL.BindTexture(TextureTarget.Texture2D, 0);
+            let res = { ID = tid }
+            existingTextures.[texture.Guid] <- res
+            res
+        else
+            existingTextures.[texture.Guid]

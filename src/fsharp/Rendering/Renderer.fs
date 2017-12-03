@@ -68,12 +68,9 @@ module Renderer =
             let viewMatrix = getViewMatrix (!camera)
             Shader.setMat4 "view" viewMatrix shader
             let lightPos = Vector3(1.0f, 1.0f, 2.0f)
-            [|  // Shader.setMat4 "model" modelMatrix
-                Shader.setMat4 "projection" projectionMatrix
-                // Shader.setMat4 "normalModel" normalMatrix
-                Shader.setVec3 "lightPos" lightPos
-                Shader.setVec3 "viewPos" (!camera).Position |]
-            |> Array.iter (fun f -> f shader)
+            Shader.setMat4 "projection" projectionMatrix shader 
+            Shader.setVec3 "lightPos" lightPos shader 
+            Shader.setVec3 "viewPos" (!camera).Position shader
             for glModel in models do
                 let key, meshes = glModel
                 let model = (!scene).Models.[key]
@@ -92,7 +89,7 @@ module Renderer =
             self.Visible <- true
             glContext.LoadAll()
             glContext.ErrorChecking <- true
-            GL.Enable(EnableCap.DepthTest)
+            GL.Enable(EnableCap.DepthTest) 
             GL.Viewport(0, 0, width, height)
 
             self.RenderFrame.Add(fun _ -> render())

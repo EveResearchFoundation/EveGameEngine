@@ -10,7 +10,7 @@ project ("Renderer")
     -- Abstraction layer source files come first
     include("AbstractionLayer/SourceOrder.lua")
 
-    files { 
+    files {
         "RendererResourceManager.fs",
         "Scene.fs"
     }
@@ -37,6 +37,7 @@ project ("Renderer")
         "FSharp.Core",
         "Utils",
         "System.Drawing",
+        pathToGlTFLoader2,
         pathToOpenTKDll,
         pathToManagedAssimpDll
     }

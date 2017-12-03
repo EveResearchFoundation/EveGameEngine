@@ -8,7 +8,7 @@ open Fake.FileUtils
 
 let configuration = getBuildParamOrDefault "configuration" "Release"
 let action =
-    let action = getBuildParamOrDefault "action" "vs2015"
+    let action = getBuildParamOrDefault "action" "vs2017"
     match action with 
     | "vs2015" | "vs2017" -> action 
     | _ -> failwith "unsupported action, only solution generation is allowed!"
@@ -78,4 +78,4 @@ Target "Default" ignore
 "Build-Utils"
     ==> "Generate"
 
-RunTargetOrDefault "Build-All"
+RunTargetOrDefault "Generate"

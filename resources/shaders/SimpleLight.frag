@@ -1,4 +1,4 @@
-#version 330 core
+#version 420
 struct Material{
     vec3 ambient;
     vec3 diffuse;
@@ -21,12 +21,13 @@ uniform vec3 viewPos;
 uniform Material material;
 
 uniform mat4 view;
-uniform samplerCube skybox; 
-uniform sampler2D texture_diffuse1;
+layout(binding=0) uniform sampler2D texture_diffuse1;
 uniform sampler2D texture_diffuse2;
 uniform sampler2D texture_diffuse3;
-uniform sampler2D texture_specular1;
+layout(binding=1) uniform sampler2D texture_specular1;
 uniform sampler2D texture_specular2;
+layout(binding=3) uniform sampler2D texture_emissive1;
+uniform samplerCube skybox; 
 
 vec3 interpolate(vec3 a, vec3 b, float c){
     //c = abs(normalize(c));
@@ -109,26 +110,26 @@ void main()
     //     vec3 mapped = vec3(1.0) - exp(-res * exposure);
     //     FragColor = vec4(mapped, 1.0);
     // }
-    vec3 ambient = vec3(0.0001);//material.ambient;
+    vec3 ambient = material.ambient;
     // diffuse
     vec3 lightDir = normalize(lightPos - FragPos);
     vec3 normal = normalize(Normal);
     float diff = max(dot(lightDir, normal), 0.0);
     // vec3 diffuseHdrColor = texture(texture_diffuse1, TexCoords).rgb;
     // vec3 diffuseMapped = diffuseHdrColor / (diffuseHdrColor + vec3(1.0));
-    vec3 distanceFactor = vec3(1.) * exp(-length(lightPos - FragPos) * 0.1);//1. / (2. * length(lightPos - FragPos));
-    vec3 diffuse = diff * distanceFactor; //* material.diffuse; //* distanceFactor;
+    vec3 distanceFactor = vec3(1.) * exp(-length(lightPos - FragPos) * 0.2);//1. / (2. * length(lightPos - FragPos));
+    vec3 diffuse = diff * distanceFactor * texture(texture_diffuse1, TexCoords).rgb; //* material.diffuse; //* distanceFactor;
     // specular
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 halfwayDir = normalize(lightDir + viewDir);  
     float spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess * 128);
-    vec3 specular = spec * vec3(1., 1., 1.);//material.specular; //* vec3(texture(texture_specular1, TexCoords)); // assuming bright white light color
+    vec3 specular = spec * texture(texture_specular1, TexCoords).rgb; // vec3(texture(texture_specular1, TexCoords)); // assuming bright white light color
     // reflection
     //vec3 R = refract(normalize(FragPos - viewPos), normal, 1.);//reflect(normalize(FragPos - viewPos), normal);
     vec3 R = reflect(normalize(- viewPos + FragPos), normal);
     float exposure = 1.;
-    vec3 res = ambient + diffuse * 0.9 + specular;
+    vec3 res = texture(texture_diffuse1, TexCoords).rgb;//ambient + diffuse + specular; // + texture(texture_emissive1, TexCoords).rgb * 10.;
     //res *= (vec3(texture(skybox, R).rgb) * 0.1);
-    vec3 mapped = vec3(1.0) - exp(-res * exposure);
-    FragColor = vec4(mapped, 1.0);
+    vec3 mapped = vec3(1.0) - exp(-res* exposure);
+    FragColor = vec4(texture(texture_diffuse1, TexCoords).rgb, 1.0);
 }

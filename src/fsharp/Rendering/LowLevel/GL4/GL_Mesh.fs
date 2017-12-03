@@ -53,7 +53,7 @@ module MeshLLAttachment =
             do GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, Vertex.size, Vertex.offset_Position)
             do GL.EnableVertexAttribArray(1)
             do GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, Vertex.size, Vertex.offset_Normal)
-            do GL.EnableVertexAttribArray(1)
+            do GL.EnableVertexAttribArray(2)
             do GL.VertexAttribPointer(2, 2, VertexAttribPointerType.Float, false, Vertex.size, Vertex.offset_TexCoord)
 
             do GL.BindVertexArray(0)
@@ -68,6 +68,7 @@ module MeshLLAttachment =
             do GL.UseProgram shaderProgramID
             do Material.activate program material
             do GL.DrawElements(BeginMode.Triangles, mesh.Indices.Length, DrawElementsType.UnsignedInt, 0)
+            do Material.deactivate ()
             do GL.BindVertexArray(0)
 
     ///// <summary>

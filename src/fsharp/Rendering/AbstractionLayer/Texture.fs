@@ -37,6 +37,7 @@ module Texture =
         Width : int
         Height : int
         Data : uint8[]
+        Guid : Guid
     }
     
     /// <summary>

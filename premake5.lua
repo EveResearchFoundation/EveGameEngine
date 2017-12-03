@@ -10,6 +10,7 @@ sampleGameDir = path.getabsolute("./tests/SampleGame")
 pathToAssimpDll = path.getabsolute(packagesDir .. "/AssimpNet/build/native/win-x64/Assimp64.dll")
 pathToManagedAssimpDll = path.getabsolute(packagesDir .. "/AssimpNet/lib/net45/AssimpNet.dll")
 pathToOpenTKDll = path.getabsolute(packagesDir .. "/OpenTK/lib/net20/OpenTK.dll")
+pathToGlTFLoader2 = path.getabsolute(packagesDir .. "/glTF2Loader/lib/net452/glTFLoader.dll")
 
 -- Resource defines
 pathToModelDir = path.getabsolute("./resources/models")

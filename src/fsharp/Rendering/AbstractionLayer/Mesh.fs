@@ -33,5 +33,5 @@ module Mesh =
         Vertices : Vertex[]
         Indices : int[]
         TextureReference : TextureReferenceID[]
-        MaterialReference : MaterialReferenceID
+        MaterialReference : Guid
     }

@@ -2,6 +2,9 @@ RESTRICTION: >= net46
 NUGET
   remote: https://www.nuget.org/api/v2
     AssimpNet (3.3.2)
-    FAKE (4.63)
+    FAKE (4.63.2)
     FSharp.Core (4.2.3)
+    glTF2Loader (1.0)
+      Newtonsoft.Json (>= 10.0.3)
+    Newtonsoft.Json (10.0.3)
     OpenTK (3.0.0-pre)

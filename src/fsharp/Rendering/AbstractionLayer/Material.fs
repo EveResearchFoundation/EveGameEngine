@@ -27,14 +27,14 @@ module Material =
     /// Materials should be managed through using the resource manager. Such efficiently manages those aswell.
     /// </remark>
     [<Struct>]
-    type GenericMaterial<'Vec4Type, 'Precision when 'Precision : unmanaged> = {
-        Ambient : 'Vec4Type
-        Diffuse : 'Vec4Type
-        Specular : 'Vec4Type
-        Emissive : 'Vec4Type
-        Shininess : 'Precision
+    type Material = {
+        Ambient : Vec4
+        Diffuse : Vec4
+        Specular : Vec4
+        Emissive : Vec4
+        Shininess : float32
+        AmbientTexture : uint32 option
+        DiffuseTexture : uint32 option
+        SpecularTexture : uint32 option
+        EmissiveTexture : uint32 option
     }
-
-    type MaterialReferenceID = Guid
-    
-    type Material = GenericMaterial<Vec4, float32>

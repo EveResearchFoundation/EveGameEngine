@@ -40,6 +40,9 @@
     <Reference Include="System" />
     <Reference Include="FSharp.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="glTFLoader">
+      <HintPath>..\..\..\packages\glTF2Loader\lib\net452\glTFLoader.dll</HintPath>
+    </Reference>
     <Reference Include="OpenTK">
       <HintPath>..\..\..\packages\OpenTK\lib\net20\OpenTK.dll</HintPath>
     </Reference>
@@ -60,8 +63,8 @@
     <Compile Include="Scene.fs" />
     <Compile Include="LowLevel\GL4\Buffer.fs" />
     <Compile Include="LowLevel\GL4\Shader.fs" />
-    <Compile Include="LowLevel\GL4\GL_Material.fs" />
     <Compile Include="LowLevel\GL4\GL_Texture.fs" />
+    <Compile Include="LowLevel\GL4\GL_Material.fs" />
     <Compile Include="LowLevel\GL4\GL_Mesh.fs" />
     <None Include="LowLevel\GL4\SourceOrder.lua" />
     <Compile Include="GUI\Widget.fs" />

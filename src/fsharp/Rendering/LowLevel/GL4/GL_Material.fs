@@ -16,7 +16,8 @@
 namespace Renderer.LowLevel.GL4
 
 module Material =
-    open Shader
+    open Shader        
+    open OpenTK.Graphics.OpenGL4
 
     let activate (shader:ShaderProgram) (material:Renderer.AbstractionLayer.Material.Material) =
         Shader.useProgram shader
@@ -28,5 +29,21 @@ module Material =
         
         let setColor (a, b) = Shader.setVec4 a b shader
         materialColorsToSet |> Array.iter setColor
-
-        Shader.setFloat32 "Material.shininess" material.Shininess shader
+        let activateTexture arg n =
+            match arg with
+            | Some (value:uint32) -> 
+                let res = 
+                    Renderer.Manager.TextureManager.getTextureWithId value 
+                    |> Renderer.LowLevel.GL4.TextureAttachmentLL.create  
+                GL.ActiveTexture n
+                GL.BindTexture(TextureTarget.Texture2D, res.ID);
+            | _ -> ()
+        activateTexture material.DiffuseTexture TextureUnit.Texture0
+        activateTexture material.SpecularTexture TextureUnit.Texture1
+        activateTexture material.EmissiveTexture TextureUnit.Texture2
+        Shader.setFloat32 "Material.shininess" material.Shininess shader 
+        Shader.setVec3 "Material.diffuse" (Vec3 material.Diffuse) shader
+        Shader.setVec3 "Material.ambient" (Vec3 material.Ambient) shader
+    
+    let deactivate () =
+        GL.BindTexture(TextureTarget.Texture2D, 0)
