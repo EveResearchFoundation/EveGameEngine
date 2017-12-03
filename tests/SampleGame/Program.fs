@@ -25,6 +25,7 @@ open OpenTK.Input
 open Renderer.AbstractionLayer.Camera
 open Renderer.AbstractionLayer
 open Renderer
+open Utils.Logging
 
 open Support
 open System.Collections.Generic
@@ -51,12 +52,14 @@ let main args =
         if i >= 60 then
             i <- 0
             GC.Collect()
+            GC.WaitForFullGCComplete() |> logDebug 
         else
             i <- i + 1
     )
     
     window.Run()
-
+    
+    logInfo "Game window was closed. Press any key to exit..."
     Console.ReadKey() |> ignore
 
     0

@@ -133,3 +133,26 @@ module File =
                 None
             #endif
             _ -> None;
+
+module Logging =
+    open System
+
+    // helper function to set the console collor and automatically set it back when disposed
+    let inline private consoleColor (fc : ConsoleColor) = 
+        let current = Console.ForegroundColor
+        Console.ForegroundColor <- fc
+        { new IDisposable with
+              member x.Dispose() = Console.ForegroundColor <- current }
+
+    // printf statements that allow user to specify output color
+    let private cprintf color str = Printf.kprintf (fun s -> use c = consoleColor color in printf "%s" s) str
+    let inline private cprintfn color str = Printf.kprintf (fun s -> use c = consoleColor color in printfn "%s" s) str
+    let inline private log kind msg = printfn "[%s] %s: %A" (System.DateTime.Now.ToLongTimeString()) kind msg
+    let inline clog color kind msg = cprintfn color "[%s] %s: %A" (System.DateTime.Now.ToLongTimeString()) kind msg
+    
+
+    let inline logInfo msg = log "INFO" msg
+    let inline logError msg = clog ConsoleColor.Red "ERROR" msg
+    let inline logWarning msg = clog ConsoleColor.Yellow "WARNING" msg
+    let inline logDebug msg = clog ConsoleColor.Magenta "DEBUG" msg
+
