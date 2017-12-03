@@ -57,6 +57,7 @@ module Renderer =
         let models =
             (!scene).Models
             |> Seq.map (fun model -> model.Key, model.Value.Meshes |> Array.mapi (fun i mesh -> i, MeshLLAttachment.MeshLLAttachment.create mesh))
+            |> Seq.toArray
 
         let render () =
             match GL.GetError() with
