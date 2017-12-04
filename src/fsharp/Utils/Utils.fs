@@ -156,3 +156,8 @@ module Logging =
     let inline logWarning msg = clog ConsoleColor.Yellow "WARNING" msg
     let inline logDebug msg = clog ConsoleColor.Magenta "DEBUG" msg
 
+module IDisposable =
+    open System
+
+    let dispose obj = (obj :> IDisposable).Dispose()
+

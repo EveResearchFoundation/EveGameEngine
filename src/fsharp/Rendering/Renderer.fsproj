@@ -31,7 +31,8 @@
     <OutputPath>bin\x64\Release\</OutputPath>
     <BaseIntermediateOutputPath>obj\x64\Release\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
-    <DefineConstants></DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Tailcalls>false</Tailcalls>
@@ -57,6 +58,7 @@
     <Compile Include="AbstractionLayer\Material.fs" />
     <Compile Include="AbstractionLayer\Mesh.fs" />
     <Compile Include="AbstractionLayer\Model.fs" />
+    <Compile Include="AbstractionLayer\Light.fs" />
     <Compile Include="AbstractionLayer\Camera.fs" />
     <None Include="AbstractionLayer\SourceOrder.lua" />
     <Compile Include="RendererResourceManager.fs" />
@@ -111,9 +113,9 @@
       </PropertyGroup>
     </When>
     <Otherwise>
-    <PropertyGroup Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\FSharp\Microsoft.FSharp.Targets')">
-      <FSharpTargetsPath>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\FSharp\Microsoft.FSharp.Targets</FSharpTargetsPath>
-    </PropertyGroup>
+      <PropertyGroup Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\FSharp\Microsoft.FSharp.Targets')">
+        <FSharpTargetsPath>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\FSharp\Microsoft.FSharp.Targets</FSharpTargetsPath>
+      </PropertyGroup>
     </Otherwise>
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />

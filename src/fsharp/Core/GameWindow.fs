@@ -31,11 +31,11 @@ type IGameWindow =
     abstract member Exit : unit -> unit
 
 
-type GameWindowGL(scene, width, height) as self =
+type GameWindowGL(scene, width, height, options) as self =
     
-    let camera = Camera.createDefault() |> ref
+    let camera = Camera.createDefault()
     
-    let openGLRenderWindow = new Renderer.OpenGL4Renderer(scene, camera, width, height)
+    let openGLRenderWindow = new Renderer.OpenGL4Renderer(scene, camera, width, height, options)
     do
         let window = openGLRenderWindow
         window.MouseMove.Add(fun args ->

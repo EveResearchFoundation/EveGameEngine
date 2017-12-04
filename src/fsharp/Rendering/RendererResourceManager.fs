@@ -196,6 +196,7 @@ module Manager =
                     if material.HasTextureEmissive then
                         loadTexture material.TextureEmissive.FilePath |> Some
                     else None
+                    
                 let res : Material = 
                     {   Ambient = material.ColorAmbient |> RendererUtils.vec4FromAssimpVec4
                         Diffuse = material.ColorDiffuse |> RendererUtils.vec4FromAssimpVec4

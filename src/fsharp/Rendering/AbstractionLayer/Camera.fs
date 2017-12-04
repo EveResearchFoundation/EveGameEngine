@@ -20,7 +20,6 @@ module Camera =
     open OpenTK
     open OpenTK.Input
 
-    [<Struct>]
     type Camera = {
         mutable Position : Vec3
         mutable Front : Vec3
@@ -44,8 +43,8 @@ module Camera =
         camera.Right <- Vec3.Normalize(Vec3.Cross(camera.Front, camera.WorldUp))
         camera.Up <- Vec3.Normalize(Vec3.Cross(camera.Right, camera.Front))
     
-    let processKeyboardInput (camera:ref<Camera>) (keyboard:KeyboardDevice) =
-        let mutable localCamera = !camera
+    let processKeyboardInput (camera:Camera) (keyboard:KeyboardDevice) =
+        let mutable localCamera = camera
         let keyboardSensitivity = localCamera.KeyboardSensitivity |> float32
         if keyboard.[Key.W] then
             localCamera.Position <- localCamera.Position + localCamera.Front * keyboardSensitivity
@@ -59,10 +58,9 @@ module Camera =
             localCamera.Position <- localCamera.Position + localCamera.Up * keyboardSensitivity
         elif keyboard.[Key.C] then
             localCamera.Position <- localCamera.Position + localCamera.Up * -keyboardSensitivity
-        camera := localCamera
 
-    let processMouseInputConstrained (camera:ref<Camera>) xoffset yoffset =
-        let mutable localCamera = !camera
+    let processMouseInputConstrained (camera:Camera) xoffset yoffset =
+        let mutable localCamera = camera
         localCamera.Yaw <- localCamera.Yaw - xoffset * localCamera.MouseSensitivity
         let newPitch =
             let p = localCamera.Pitch + yoffset * localCamera.MouseSensitivity
@@ -71,7 +69,7 @@ module Camera =
             else p
         localCamera.Pitch <- newPitch
         updateCameraVectors &localCamera
-        camera := localCamera
+        // camera := localCamera
 
     let getViewMatrix camera = Mat4.LookAt(camera.Position, camera.Position + camera.Front, camera.Up)
 

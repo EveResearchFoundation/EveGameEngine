@@ -23,6 +23,7 @@ open System
 type Scene = {
     Initialized : bool
     Models : System.Collections.Generic.Dictionary<Guid, Model>
+    Lights : Light []
 }
 
 module Scene = 

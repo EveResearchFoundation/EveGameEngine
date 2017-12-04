@@ -5,5 +5,6 @@ files {
     "Mesh.fs",
     "Model.fs",
     "Camera.fs",
+	"Light.fs",
     "SourceOrder.lua"
 }

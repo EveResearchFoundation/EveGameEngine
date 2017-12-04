@@ -122,14 +122,14 @@ void main()
     // specular
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 halfwayDir = normalize(lightDir + viewDir);  
-    float spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess * 128);
-    vec3 specular = spec * texture(texture_specular1, TexCoords).rgb; // vec3(texture(texture_specular1, TexCoords)); // assuming bright white light color
+    float spec = pow(max(dot(normal, halfwayDir), 0.0), 1. * 128);
+    vec3 specular = spec * texture(texture_specular1, TexCoords).rgb * vec3(2.); // vec3(texture(texture_specular1, TexCoords)); // assuming bright white light color
     // reflection
     //vec3 R = refract(normalize(FragPos - viewPos), normal, 1.);//reflect(normalize(FragPos - viewPos), normal);
     vec3 R = reflect(normalize(- viewPos + FragPos), normal);
     float exposure = 1.;
-    vec3 res = texture(texture_diffuse1, TexCoords).rgb;//ambient + diffuse + specular; // + texture(texture_emissive1, TexCoords).rgb * 10.;
+    vec3 res = (ambient + diffuse + specular) * lightColor; // + texture(texture_emissive1, TexCoords).rgb * 10.;
     //res *= (vec3(texture(skybox, R).rgb) * 0.1);
     vec3 mapped = vec3(1.0) - exp(-res* exposure);
-    FragColor = vec4(texture(texture_diffuse1, TexCoords).rgb, 1.0);
+    FragColor = vec4(res, 1.0);
 }
